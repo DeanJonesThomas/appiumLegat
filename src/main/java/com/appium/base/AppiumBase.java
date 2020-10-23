@@ -1,30 +1,22 @@
 package com.appium.base;
 
-import java.net.URL;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import java.io.File;
 import org.openqa.selenium.WebElement;
-import io.appium.java_client.android.AndroidDriver;
+
+import com.appium.exceptions.BaseException;
+
+import io.appium.java_client.AppiumDriver;
 
 public class AppiumBase
 {
-    private AndroidDriver<WebElement> driver;
+    public AppiumDriver<WebElement> driver;
     
-    public AndroidDriver<WebElement> setUp() {
+    public AppiumBase(String osType) throws Throwable {
         try {
-            final File classpathRoot = new File("src/main/resources/apk");
-            final File app = new File(classpathRoot.getCanonicalPath(), "app-debugSkip.apk");
-            System.out.println(app.getAbsolutePath());
-            final DesiredCapabilities capabilities = new DesiredCapabilities();
-            capabilities.setCapability("deviceName", "AVDDevice2");
-            capabilities.setCapability("app", app.getAbsolutePath());
-          //  capabilities.setCapability("appPackage", "io.appium.android.apis");
-           // capabilities.setCapability("appActivity", ".ApiDemos");
-            driver =  new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);
-            return driver;
+        	ObjectDriverFactory odf = new ObjectDriverFactory(osType);
+        	driver = odf.setUp(osType);
         }
         catch (Exception ex) {
-            return null;
+        	throw new BaseException(ex.getMessage());
         }
     }
 }
